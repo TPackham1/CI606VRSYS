@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+
+
 
 
 public class GetLoaction : MonoBehaviour
@@ -10,62 +13,69 @@ public class GetLoaction : MonoBehaviour
   //  private string apiKey = "dbacd66fb41f43c6b3b142955231610";
 
     public LocationInfo Info;
+
     public float latitude;
     public float longitude;
 
+    private string IPAddress;
+
     void Start()
     {
-       GetIP();
+        StartCoroutine("GetIP");
     }
     private IEnumerable GetIP()
     {
-        var whereAmI = new UnityWebRequest("http://bot.whatismyipaddress.com/")
+        var www = new UnityWebRequest("http://bot.whatismyipaddress.com/")
         {
             downloadHandler = new DownloadHandlerBuffer()
          }; 
 
-        yield return whereAmI.SendWebRequest();
-        if (whereAmI.result =! UnityWebRequest.Result.ProtocolError)
+        yield return www.SendWebRequest();
+        if (www.result != UnityWebRequest.Result.ProtocolError)
         { yield break; }
 
 
-        IPAddress = whereAmI.downloadHandler.text;
-        GetCoordinates(IPAddress);
+        IPAddress = www.downloadHandler.text;
+        // GetCoordinates(IPAddress);
+
+
+        StartCoroutine("GetCoordinates");
     }
 
-    private IEnumerable GetCoordinates(string IP)
+    private IEnumerable GetCoordinates()
     {
-        var www = new UnityWebRequest("http://ip-api.com/json/" + IP)
+        var www = new UnityWebRequest("http://ip-api.com/json/" + IPAddress)
         {
             downloadHandler = new DownloadHandlerBuffer ()
         };
         yield return www.SendWebRequest();
-        if (whereAmI.result =! UnityWebRequest.Result.ProtocolError)
+        if (www.result != UnityWebRequest.Result.ProtocolError)
         { yield break; }
 
-        Info = JsonUtility<LocationInfo>(www.downloadHandler.text);
+        Info = JsonUtility.FromJson<LocationInfo>(www.downloadHandler.text);
         latitude = Info.lat;
         longitude = Info.lon;
         WeatherData.Begin();
     }
 
-    [Serializable]
+     [Serializable]
     public class LocationInfo
     {
-        public string status;
-        public string country;
-        public string countryCode;
+        // public string status;
+        public string name;
         public string region;
-        public string regionName;
-        public string city;
-        public string PCNum;
+        public string country;
+        
+       // public string regionName;
+      //  public string city;
+       // public string PCNum;
         public float lat;
         public float lon;
-        public string timeZone;
-        public string isp;
-        public string org;
-        public string @as;
-        public string query;
+        public string tz_id;
+       // public string isp;
+        public float locationtime_epoch;
+        public string localtime;
+        //public string query;
     }
 
 

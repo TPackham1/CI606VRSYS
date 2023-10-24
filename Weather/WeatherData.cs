@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,16 +39,35 @@ public class WeatherData : MonoBehaviour
         {
             if (timer <= 0)
             {
-                GetWeatherInfo();
+                StartCoroutine("GetWeatherInfo");
                 timer = minuetsBetweenUpdate * 60;
             }
             else { timer -= Time.deltaTime;  }
+           
         }
     }
-
-    private IEnumerator GetWeatherInfo()
-    { 
-        
-    }
     
+    private IEnumerator GetWeatherInfo()
+    {
+        var www = new UnityWebRequest();  
+    }
+
+    [Serializable]
+    public class WeatherInfo()
+    { 
+        public float latitude;
+        public float longitude;
+        public string timezone;
+        public Current currently;
+        public int offset;
+    }
+
+    [Serializable]
+    public class Current
+    {
+        public string lastUpdated;
+        public 
+
+    }
+
 }
