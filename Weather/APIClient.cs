@@ -7,6 +7,9 @@ using System;
 public class APIClient : MonoBehaviour
 {
     private string apiUrl;
+  // WeatherDataAPIClient weatherDataAPIClient;
+   // IPDataAPIClient ipDataAPIClient;
+    // LonLatDataAPIClient lonLatDataAPIClient;
 
     public async Task<string> GetDataFromAPIAsync()
     {
